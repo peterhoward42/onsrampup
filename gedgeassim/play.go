@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gedge/graphson"
+
 	"github.com/gedge/gremgo-neptune"
 	_ "github.com/schwartzmx/gremgo-neptune"
 )
@@ -40,11 +42,20 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	// This is the native json way to inspect results
 	j, err := json.Marshal(res[0].Result.Data)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("\nRESULT XXXXXX: %s", j)
+	fmt.Printf("XXXXXX: Native JSON form: %s\n", j)
+
+	// And this the graphson-parsed way
+	raw := res[0].Result.Data
+	graphsonRes, err := graphson.DeserializeStringListFromBytes(raw)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("XXXXXX: Parsed grapson JSON form: %s\n", graphsonRes)
 }
 
 // here
